@@ -1,13 +1,12 @@
 #! /usr/local/bin/env python
 
 import requests
-import csv
-import ftplib
 import os
 from decimal import Decimal
 from datetime import datetime, timedelta, tzinfo, timezone
 from dateutil import tz
 import json
+from geojson import Feature, Point, FeatureCollection, dumps
 
 current_working_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,20 +15,27 @@ modis_categories = {"Modis24": "https://firms.modaps.eosdis.nasa.gov/data/active
 viirs_categories = {"Viirs24": "https://firms.modaps.eosdis.nasa.gov/data/active_fire/viirs/csv/VNP14IMGTDL_NRT_USA_contiguous_and_Hawaii_24h.csv", "Viirs48":  "https://firms.modaps.eosdis.nasa.gov/data/active_fire/viirs/csv/VNP14IMGTDL_NRT_USA_contiguous_and_Hawaii_48h.csv", "Viirs7": "https://firms.modaps.eosdis.nasa.gov/data/active_fire/viirs/csv/VNP14IMGTDL_NRT_USA_contiguous_and_Hawaii_7d.csv"}
 
 
-
 def download_points(k, v):
     r = requests.get(v)
-    output_name = str(k) + ".csv"
+    output_name = str(k) + ".geojson"
     outfile = open(output_name, "w")
     t = r.text.splitlines()
+    detections = []
     for line in t[1:]:
         detection = line.split(',')
-        if Decimal(45) <= Decimal(detection[0]) <= Decimal(49.5) and Decimal(-125) <= Decimal(detection[1]) <= Decimal(-116.25) and int(detection[8]) > 30:
-            modis_detection = {'type': "Feature", 'geometry': {'type': 'Point', "coordinates": [detection[0], detection[1]]}, "properties": {'timestamp': convert_to_pacific_time(detection[5], detection[6]), 'confidence': detection[8]}}
-            print(json.dumps(modis_detection))
-            #outfile.write(str(detection) + '\n')
+        if Decimal(45) <= Decimal(detection[0]) <= Decimal(49.5) and Decimal(-125) <= Decimal(detection[1]) <= Decimal(-116.25):
+            if k[0] == "V" and detection[8] != "low" or k[0] == "M" and int(detection[8]) > 30:          
+                x = float(detection[0])
+                y = float(detection[1])
+                modis_point = Point((x, y))
+                modis_timestamp = convert_to_pacific_time(detection[5], detection[6])
+                modis_confidence = detection[8]
+                modis_detection = Feature(geometry=modis_point, properties={"timestamp": modis_timestamp, "confidence": modis_confidence})
+                detections.append(modis_detection)
+    if len(detections) > 0:
+        feature_collection = FeatureCollection(detections)
+        outfile.write(dumps(feature_collection, sort_keys=True, indent=4))
         
-
 def convert_to_pacific_time(date_field, time_field):
     date_field = date_field.split('-')
     #print(time_field)
@@ -40,7 +46,8 @@ def convert_to_pacific_time(date_field, time_field):
     pacific_time_string = pacific_time.strftime('%c')
     return pacific_time_string
 
-
 for k in modis_categories.keys():
     download_points(k, modis_categories[k])
 
+for k in viirs_categories.keys():
+    download_points(k, viirs_categories[k])
