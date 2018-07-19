@@ -1,0 +1,16 @@
+{
+  "active_fire": {
+    "height": 32,
+    "pixelRatio": 1,
+    "width": 19,
+    "x": 0,
+    "y": 0
+  },
+  "controlled_fire": {
+    "height": 32,
+    "pixelRatio": 1,
+    "width": 19,
+    "x": 19,
+    "y": 0
+  }
+}
