@@ -31,16 +31,17 @@ map.on('load', function(){
             map.addImage('active_fire', image);
 
         });
-        map.addSource('large_incidents', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/large_incident.geojson'});
+        map.addSource('large_incidents', {type: 'geojson', data: 'https://aidianholder.com/mapserver/large_incident.geojson'});
         map.addLayer({
             "id": "major_incidents",
             "type": "symbol",
             "source": "large_incidents",
             "layout": {
-                "icon-image": "active_fire" 
+                "icon-image": "active_fire",
+                "icon-size": 0.8
             }
         });
-        map.addSource('current_perimeters', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/current_perimeters.geojson'});
+        map.addSource('current_perimeters', {type: 'geojson', data: 'https://aidianholder.com/mapserver/current_perimeters.geojson'});
         map.addLayer({
             "id": "perimeters",
             "type": "fill",
@@ -51,7 +52,7 @@ map.on('load', function(){
                 'fill-opacity': 0.6
             }
         });
-        map.addSource('modis24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/Modis24.geojson'});
+        map.addSource('modis24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis24.geojson'});
         map.addLayer({
             "id": "Modis_24",
             "type": "circle",
@@ -60,7 +61,7 @@ map.on('load', function(){
             "paint":{
                 'circle-radius': {
                  'base': 2,
-                 'stops': [[12, 3], [15, 6]]
+                 'stops': [[11, 3], [12, 6], [13, 9]]
                 },
                 'circle-color': '#ce2528'
             }
