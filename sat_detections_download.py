@@ -23,18 +23,19 @@ def download_points(k, v):
     detections = []
     for line in t[1:]:
         detection = line.split(',')
+        #MODIS & VIIRS have same layout for first field: first field - index 0 - of each hit is lat, second is lon, compare vs area of interest in first if statement, proceed or skip if didn't c
         if Decimal(45) <= Decimal(detection[0]) <= Decimal(49.5) and Decimal(-125) <= Decimal(detection[1]) <= Decimal(-116.25):
             if k[0] == "V" and detection[8] != "low" or k[0] == "M" and int(detection[8]) > 30:          
                 x = float(detection[0])
                 y = float(detection[1])
-                modis_point = Point((x, y))
+                modis_point = Point((y, x))
                 modis_timestamp = convert_to_pacific_time(detection[5], detection[6])
                 modis_confidence = detection[8]
                 modis_detection = Feature(geometry=modis_point, properties={"timestamp": modis_timestamp, "confidence": modis_confidence})
                 detections.append(modis_detection)
     if len(detections) > 0:
         feature_collection = FeatureCollection(detections)
-        outfile.write(dumps(feature_collection, sort_keys=True, indent=4))
+        outfile.write(dumps(feature_collection))
         
 def convert_to_pacific_time(date_field, time_field):
     date_field = date_field.split('-')
