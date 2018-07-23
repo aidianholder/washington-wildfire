@@ -85,6 +85,56 @@ map.on('load', function(){
                 'circle-color': '#fff600'
             }
         })
+
+        map.addSource('modis7', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis7.geojson'});
+        map.addLayer({
+            "id": "Modis_7",
+            "type": "circle",
+            "source": "modis7",
+            "layout": {},
+            "paint":{
+                'circle-radius': {
+                 'base': 2,
+                 'stops': [[11, 3], [12, 6], [13, 9]]
+                },
+                'circle-color': '#141414'
+            }
+        })
+
+        
+
+        var popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+        });
+
+        map.on('mouseenter', 'major_incidents', function(e) {
+        // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = 'pointer';
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var fire_name = e.features[0].properties.FIRE_NM;
+            var start_date = e.features[0].properties.START_DATE;
+            var acres_burned = e.features[0].properties.RPTD_ACRES;
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(fire_name + "<br/>" + start_date + "<br/>" + acres+burned)
+            .addTo(map);
+        });
+
+       map.on('mouseleave', 'places', function() {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
 });
 </script>
 
