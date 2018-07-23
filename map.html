@@ -20,8 +20,8 @@ mapboxgl.accessToken = '';
 var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'https://aidianholder.com/mapserver/yhr-wildfire.json', // stylesheet location
-    center: [-121, 46.5], // starting position [lng, lat]
-    zoom: 10 // starting zoom
+    center: [-120.5, 46.5], // starting position [lng, lat]
+    zoom: 9 // starting zoom
 });
 
 map.on('load', function(){
@@ -57,34 +57,8 @@ map.on('load', function(){
                 'fill-opacity': 0.4
             }
         });
-        map.addSource('modis24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis24.geojson'});
-        map.addLayer({
-            "id": "Modis_24",
-            "type": "circle",
-            "source": "modis24",
-            "layout": {},
-            "paint":{
-                'circle-radius': {
-                 'base': 2,
-                 'stops': [[11, 3], [12, 6], [13, 9]]
-                },
-                'circle-color': '#ce2528'
-            }
-        })
-        map.addSource('modis48', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis48.geojson'});
-        map.addLayer({
-            "id": "Modis_48",
-            "type": "circle",
-            "source": "modis48",
-            "layout": {},
-            "paint":{
-                'circle-radius': {
-                 'base': 2,
-                 'stops': [[11, 3], [12, 6], [13, 9]]
-                },
-                'circle-color': '#fff600'
-            }
-        })
+        
+       
 
         map.addSource('modis7', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis7.geojson'});
         map.addLayer({
@@ -95,11 +69,43 @@ map.on('load', function(){
             "paint":{
                 'circle-radius': {
                  'base': 2,
-                 'stops': [[11, 3], [12, 6], [13, 9]]
+                 'stops': [[11, 4], [12, 10], [13, 14]]
                 },
                 'circle-color': '#141414'
             }
         })
+        
+        map.addSource('modis48', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis48.geojson'});
+        map.addLayer({
+            "id": "Modis 48",
+            "type": "circle",
+            "source": "modis48",
+            "layout": {},
+            "paint":{
+                'circle-radius': {
+                 'base': 2,
+                 'stops': [[11, 4], [12, 10], [13, 14]]
+                },
+                'circle-color': '#fff600'
+            }
+        })
+
+
+        map.addSource('modis24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/Modis24.geojson'});
+        map.addLayer({
+            "id": "Modis 24",
+            "type": "circle",
+            "source": "modis24",
+            "layout": {},
+            "paint":{
+                'circle-radius': {
+                 'base': 2,
+                 'stops': [[11, 4], [12, 10], [13, 14]]
+                },
+                'circle-color': '#ce2528'
+            }
+        })
+
 
         
 
@@ -127,11 +133,11 @@ map.on('load', function(){
         // Populate the popup and set its coordinates
         // based on the feature found.
         popup.setLngLat(coordinates)
-            .setHTML(fire_name + "<br/>" + start_date + "<br/>" + acres+burned)
+            .setHTML("<h2>" + fire_name + "</h2>Date Reported: " + start_date + "<br/>Acres Burned: " + acres_burned)
             .addTo(map);
         });
 
-       map.on('mouseleave', 'places', function() {
+       map.on('mouseleave', 'major_incidents', function() {
             map.getCanvas().style.cursor = '';
             popup.remove();
         });
