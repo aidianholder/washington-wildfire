@@ -10,14 +10,12 @@
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
-        #legend {position: relative; top:5%; right: 5%; width: 100px; height: 100px; background-color: #222222;}
-
+	#legend {position:absolute; top:20px; right:20px; width:200px;height:200px; background-color:#2c2c2c;}
     </style>
 </head>
 <body>
 
-<div id='map'></div>
-<div id='legend'></div>
+<div id='map'></div><div id="legend"></div>
 <script>
 mapboxgl.accessToken = '';
 var map = new mapboxgl.Map({
@@ -29,7 +27,7 @@ var map = new mapboxgl.Map({
 
 map.on('load', function(){
 
-        map.loadImage('https://aidianholder.com/mapserver/img/active_fire.png', function(error, image) {
+        map.loadImage('https://aidianholder.com/mapserver/img/active_fire_2.png', function(error, image) {
             if (error) throw error;
             map.addImage('active_fire', image);
 
@@ -65,7 +63,7 @@ map.on('load', function(){
 
         map.addSource('modis7', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/Modis7.geojson'});
         map.addLayer({
-            "id": "Modis 7",
+            "id": "Modis7",
             "type": "circle",
             "source": "modis7",
             "layout": {},
@@ -80,7 +78,7 @@ map.on('load', function(){
         
         map.addSource('modis48', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/Modis48.geojson'});
         map.addLayer({
-            "id": "Modis 48",
+            "id": "Modis48",
             "type": "circle",
             "source": "modis48",
             "layout": {},
@@ -96,7 +94,7 @@ map.on('load', function(){
 
         map.addSource('modis24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/Modis24.geojson'});
         map.addLayer({
-            "id": "Modis 24",
+            "id": "Modis24",
             "type": "circle",
             "source": "modis24",
             "layout": {},
