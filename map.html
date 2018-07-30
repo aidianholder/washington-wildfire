@@ -171,6 +171,8 @@ map.on('load', function(){
             var fire_name = e.features[0].properties.FIRE_NM;
             var start_date = e.features[0].properties.START_DATE;
             var acres_burned = e.features[0].properties.RPTD_ACRES;
+            let containment = e.features[0].properties['Percent Containe'];
+            console.log(e.features[0].properties)
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -182,7 +184,7 @@ map.on('load', function(){
         // Populate the popup and set its coordinates
         // based on the feature found.
         popup.setLngLat(coordinates)
-            .setHTML("<h2>" + fire_name + "</h2>Date Reported: " + start_date + "<br/>Acres Burned: " + acres_burned)
+            .setHTML("<h2>" + fire_name + "</h2>Date Reported: " + start_date + "<br/>Acres Burned: " + acres_burned + "<br/>Containment: " + containment) 
             .addTo(map);
         });
 
