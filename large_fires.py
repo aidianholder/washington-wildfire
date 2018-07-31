@@ -59,15 +59,17 @@ def compose_fire_data():
     xml_content = xmltodict.parse(xml)
     fires = xml_content['fires']['fire']
     fire_info = {}
+    #print('xml fire names')
     for fire in fires:
         fire_name = fire['incident_name'] 
+        #print('fire name = ' + fire_name)
         if fire_name.find('(') != -1:
-            fire_name = fire_name[:fire_name.find('(')]
+            fire_name = fire_name[:fire_name.find('(')-1]
+        fire_hash = {}
         details = ['location', 'percent_contained', 'est_contain_date', 'residences_threatened', 'other_structures_threatened', 'fuel_terrain', 'total_people', 'crews', 'engines', 'helicopters']
         for detail in details:
-            fire_hash = {}
             fire_hash[detail] = fire[detail]
-            fire_info[fire_name] = fire_hash
+        fire_info[fire_name] = fire_hash
     large_fires = NWGCC_layers.get(1)
     #outfile = open('large_incidents.geojson', 'w')
     #outfile.write(dumps(large_fires))
