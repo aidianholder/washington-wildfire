@@ -83,18 +83,7 @@ map.on('load', function(){
        
 
         map.addSource('large_incidents', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/active_incidents.geojson'});
-        map.addLayer({
-            "id": "major_incidents",
-            "type": "symbol",
-            "source": "large_incidents",
-            "layout": {
-                "icon-image": "active_fire",
-                "icon-size": 0.6,
-                "text-field": ["get", "FIRE_NM"],
-                "text-font": ["Roboto Medium"],
-                "text-anchor": "left"
-            }
-        });
+        
         map.addSource('current_perimeters', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/current_perimeters.geojson'});
         map.addLayer({
             "id": "perimeters",
@@ -117,8 +106,8 @@ map.on('load', function(){
             "layout": {},
             "paint":{
                 'circle-radius': {
-                 'base': 2,
-                 'stops': [[11, 4], [12, 10], [13, 14]]
+                 'base': 1,
+                 'stops': [[9, 2], [10, 3], [11, 8], [12, 10]]
                 },
                 'circle-color': '#141414'
             }
@@ -132,8 +121,8 @@ map.on('load', function(){
             "layout": {},
             "paint":{
                 'circle-radius': {
-                 'base': 2,
-                 'stops': [[11, 4], [12, 10], [13, 14]]
+                 'base': 1,
+                 'stops': [[9, 2], [10, 3], [11, 8], [12, 10]]
                 },
                 'circle-color': '#fff600'
             }
@@ -148,14 +137,42 @@ map.on('load', function(){
             "layout": {},
             "paint":{
                 'circle-radius': {
-                 'base': 2,
-                 'stops': [[11, 4], [12, 10], [13, 14]]
+                 'base': 1,
+                 'stops': [[9, 2], [10, 3], [11, 8], [12, 10]]
                 },
                 'circle-color': '#ce2528'
             }
         })
+	map.addSource('viirs24', {type: 'geojson', data: 'https://aidianholder.com/mapserver/wildfires/Viirs24.geojson'});
+	map.addLayer({
+		"id": "Viirs24",
+		"type": "circle",
+		"source": "viirs24",
+		"layout": {},
+		"paint":{
+			'circle-radius': {
+				'base': 1,
+				'stops': [[9, 2], [10,3], [11,6], [12,8]]
+			},
+			'circle-color': "#e226ad"
+		}
+	})
+	
 
-
+	map.addLayer({
+            "id": "major_incidents",
+            "type": "symbol",
+            "source": "large_incidents",
+            "layout": {
+                "icon-image": "active_fire",
+                "icon-size": 0.6,
+                "text-field": ["get", "FIRE_NM"],
+                "text-font": ["Roboto Medium"],
+                "text-anchor": "left"
+            }
+        });
+ 
+	
         
 
         var popup = new mapboxgl.Popup({
@@ -171,7 +188,7 @@ map.on('load', function(){
             var fire_name = e.features[0].properties.FIRE_NM;
             var start_date = e.features[0].properties.START_DATE;
             var acres_burned = e.features[0].properties.RPTD_ACRES;
-            let containment = e.features[0].properties['Percent Containe'];
+		let containment = e.features[0].properties.percent_contained;
             console.log(e.features[0].properties)
 
         // Ensure that if the map is zoomed out such that multiple
