@@ -190,8 +190,15 @@ map.on('load', function(){
             var start_date = e.features[0].properties.START_DATE;
             var acres_burned = e.features[0].properties.RPTD_ACRES;
 		let containment = e.features[0].properties.percent_contained;
-            console.log(e.features[0].properties)
-
+		console.log(containment)
+		let contain_date = e.features[0].properties.est_containment_date;
+        	let terrain = e.features[0].properties.fuel_terrain;
+		let homes_threatened = e.features[0].properties.residences_threatened;
+		let loc = e.features[0].properties.location;
+		let f_status = e.features[0].properties.STATUS;    
+	
+	console.log(e.features[0].properties)
+	console.log(e)
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
         // over the copy being pointed to.
@@ -199,11 +206,24 @@ map.on('load', function(){
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
 
+	function buildPopupHTML(){
+		popupContent = "<h2>" + fire_name + "</h2>Date Reported: " + start_date + "<br/>Acres Burned: " + acres_burned;
+		if (typeof(containment) != undefined) {
+			popupContent = popupContent + "<br/>Percent Contained: " + containment + "%"
+		}; 
+		if (typeof(contain_date) != undefined) {
+			 popupContent = popupContent + "<br/>Estimated Containment: " + contain_date 
+		};
+		popupContent = popupContent + "<br/>Status: " + f_status;
+		
+		return(popupContent)
+		};
+
         // Populate the popup and set its coordinates
         // based on the feature found.
         popup.setLngLat(coordinates)
-            .setHTML("<h2>" + fire_name + "</h2>Date Reported: " + start_date + "<br/>Acres Burned: " + acres_burned + "<br/>Containment: " + containment) 
-            .addTo(map);
+            	.setHTML(buildPopupHTML())	
+		.addTo(map);
         });
 
        map.on('mouseleave', 'major_incidents', function() {
