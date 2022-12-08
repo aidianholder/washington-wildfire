@@ -1,7 +1,7 @@
 astroid==1.6.5
 beautifulsoup4==4.6.0
 bs4==0.0.1
-certifi==2018.4.16
+certifi==2022.12.7
 chardet==3.0.4
 coverage==3.7.1
 coveralls==0.4.4
